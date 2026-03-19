@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CALIBRATE YOUR SERENITY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-1: #1a0b2e;
+      --bg-2: #0d1b2a;
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-strong: rgba(255, 255, 255, 0.08);
+      --gold: #ffd700;
+      --gold-soft: #ffea75;
+      --text: #f4efff;
+      --muted: #afa6c9;
+      --danger: #c7a778;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .kiosk {
+      position: relative;
+      width: min(1100px, 100%);
+      height: min(90vh, 760px);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 28px rgba(255, 215, 0, 0.12);
+      display: grid;
+      grid-template-rows: auto minmax(320px, 1fr) auto;
+      gap: 14px;
+      padding: 18px;
+      z-index: 2;
+    }
+
+    .header {
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-weight: 800;
+      color: var(--gold);
+      font-size: clamp(1.2rem, 2.3vw, 1.9rem);
+      text-shadow: 0 0 14px rgba(255, 215, 0, 0.35);
+      padding-top: 2px;
+    }
+
+    .header::before,
+    .header::after {
+      content: "✦";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 215, 0, 0.7);
+      font-size: 0.8rem;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+    }
+
+    .header::before {
+      left: clamp(10px, 4vw, 54px);
+    }
+
+    .header::after {
+      right: clamp(10px, 4vw, 54px);
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(280px, 2.2fr) minmax(260px, 1fr);
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .video-card,
+    .side-panel {
+      border: 1px solid rgba(255, 215, 0, 0.18);
+      border-radius: 14px;
+      background: var(--glass-strong);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      min-height: 0;
+    }
+
+    .video-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-card.vibe-changed {
+      animation: vibeFlash 600ms ease-out;
+    }
+
+    @keyframes vibeFlash {
+      0% { box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+      100% { box-shadow: inset 0 0 0px rgba(255, 215, 0, 0), 0 0 0px rgba(255, 215, 0, 0); }
+    }
+
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+      background: #111;
+    }
+
+    .hud-overlay {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 14px;
+      border: 1px solid rgba(255, 215, 0, 0.22);
+      border-radius: 12px;
+      background: rgba(12, 10, 20, 0.42);
+      padding: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+    }
+
+    .target {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: clamp(0.95rem, 1.7vw, 1.2rem);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.35);
+      transition: text-shadow 200ms ease;
+    }
+
+    .target.vibe-changed {
+      animation: vibeHighlight 600ms ease-out;
+    }
+
+    @keyframes vibeHighlight {
+      0% { text-shadow: 0 0 24px rgba(255, 215, 0, 1), 0 0 12px rgba(255, 215, 0, 0.8); }
+      50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 8px rgba(255, 215, 0, 0.6); }
+      100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.35); }
+    }
+
+    .feedback {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      min-height: 1.1rem;
+    }
+
+    #timer {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: rgba(255, 215, 0, 0.6);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .hold-track {
+      margin-top: 10px;
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    #holdBar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #f2ba00, #ffd700);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);
+      transition: width 0.15s linear, background-color 220ms ease;
+    }
+
+    .side-panel {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: auto;
+    }
+
+    .panel-title {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 92px 1fr 42px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .bar-label {
+      color: #d5c68b;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.16);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #d2aa1b, #ffd700);
+      transition: width 0.3s ease-out;
+    }
+
+    .bar-val {
+      text-align: right;
+      font-size: 0.7rem;
+      color: #f2e5a8;
+    }
+
+    .footer {
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+      letter-spacing: 0.1em;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      padding-bottom: 2px;
+    }
+
+    .footer::before,
+    .footer::after {
+      content: "✿";
+      color: rgba(255, 215, 0, 0.62);
+      font-size: 0.74rem;
+      margin: 0 10px;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.35);
+    }
+
+    .footer small {
+      display: block;
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0.04em;
+      font-size: 0.68rem;
+      margin-top: 2px;
+    }
+
+    #bootGate {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 7, 14, 0.74);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9;
+    }
+
+    .boot-card {
+      width: min(500px, calc(100vw - 28px));
+      border: 1px solid rgba(255, 215, 0, 0.26);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 24px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .boot-title {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .boot-status {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      min-height: 1.1rem;
+    }
+
+    #startBtn {
+      margin-top: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.55);
+      border-radius: 999px;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, #d8ad1a, #ffd700);
+      color: #231a04;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    #startBtn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #snapFlash {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 8;
+      transition: opacity 100ms linear;
+    }
+
+    #polaroidLayer {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 350ms ease;
+      z-index: 10;
+    }
+
+    #polaroidLayer.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .polaroid {
+      width: min(72vw, 360px);
+      background: #fff;
+      border-radius: 2px;
+      padding: 12px 12px 42px;
+      transform: rotate(-3deg);
+      box-shadow: 0 28px 54px rgba(0, 0, 0, 0.52);
+      text-align: center;
+      transition: transform 300ms ease;
+    }
+
+    #polaroidImg {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+      background: #111;
+    }
+
+    .polaroid-caption {
+      margin-top: 10px;
+      color: #222;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    #downloadBtn {
+      margin-top: 10px;
+      border: 1px solid #333;
+      background: #fff;
+      color: #222;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    #captureCanvas {
+      display: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 940px) {
+      .kiosk {
+        height: min(94vh, 900px);
+        grid-template-rows: auto auto auto;
+      }
+
+      .main {
+        grid-template-columns: 1fr;
+      }
+
+      .video-card {
+        min-height: 320px;
+      }
+
+      .side-panel {
+        min-height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="kiosk">
+    <header class="header">CALIBRATE YOUR SERENITY</header>
+
+    <section class="main">
+      <div class="video-card">
+        <video id="video" autoplay muted playsinline></video>
+
+        <div class="hud-overlay" aria-live="polite">
+          <div id="timer">20s</div>
+          <div id="targetText" class="target">Match the Vibe: ...</div>
+          <div id="feedback" class="feedback">Breathe and focus.</div>
+          <div class="hold-track"><div id="holdBar"></div></div>
+        </div>
+      </div>
+
+      <aside class="side-panel" aria-label="Emotion levels">
+        <div class="panel-title">Signal Quality</div>
+        <div class="bar-row"><div class="bar-label">NEUTRAL</div><div class="bar-track"><div id="bar-NEUTRAL" class="bar-fill"></div></div><div id="val-NEUTRAL" class="bar-val">0%</div></div>
+        <div class="bar-row"><div class="bar-label">HAPPY</div><div class="bar-track"><div id="bar-HAPPY" class="bar-fill"></div></div><div id="val-HAPPY" class="bar-val">0%</div></div>
+        <div class="bar-row"><div class="bar-label">ANGRY</div><div class="bar-track"><div id="bar-ANGRY" class="bar-fill"></div></div><div id="val-ANGRY" class="bar-val">0%</div></div>
+        <div class="bar-row"><div class="bar-label">SURPRISED</div><div class="bar-track"><div id="bar-SURPRISED" class="bar-fill"></div></div><div id="val-SURPRISED" class="bar-val">0%</div></div>
+        <div class="bar-row"><div class="bar-label">SAD</div><div class="bar-track"><div id="bar-SAD" class="bar-fill"></div></div><div id="val-SAD" class="bar-val">0%</div></div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      March 20, Islington College
+      <small>made with &lt;3 by the airo community</small>
+    </footer>
+  </main>
+
+  <section id="bootGate">
+    <div class="boot-card">
+      <div class="boot-title">Begin Calibration</div>
+      <div id="status" class="boot-status">Models in ./models and audio in ./sounds. Camera and audio unlock after your tap.</div>
+      <button id="startBtn" type="button">Begin Calibration</button>
+    </div>
+  </section>
+
+  <div id="snapFlash"></div>
+
+  <section id="polaroidLayer" aria-live="assertive">
+    <div class="polaroid">
+      <img id="polaroidImg" alt="Captured vibe photo" />
+      <div class="polaroid-caption">VIBE CAPTURED.</div>
+      <button id="downloadBtn" type="button">⬇️ SAVE VIBE</button>
+    </div>
+  </section>
+
+  <canvas id="captureCanvas"></canvas>
+
+  <audio id="backgroundMusicAudio" preload="auto" src="./sounds/background-music.mp3"></audio>
+  <audio id="cameraClickAudio" preload="auto" src="./sounds/camera-click.mp3"></audio>
+  <audio id="energyBuildAudio" preload="auto" src="./sounds/energy-build.mp3"></audio>
+  <audio id="softErrorAudio" preload="auto" src="./sounds/soft-error.mp3"></audio>
+  <audio id="powerDownAudio" preload="auto" src="./sounds/power-down.mp3"></audio>
+
+  <script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script>
+    const MODEL_URL = "./models";
+    const EMOTIONS = ["NEUTRAL", "HAPPY", "ANGRY", "SURPRISED", "SAD"];
+    const DETECT_INTERVAL_MS = 100;
+    const SMOOTHING_WINDOW = 10;
+    const WIN_THRESHOLD = 0.85;
+    const DROP_THRESHOLD = 0.80;
+    const HOLD_SECONDS_REQUIRED = 3;
+    const ROUND_TIMEOUT_SECONDS = 20;
+    const AUDIO_LEVELS = {
+      bgm: 0.32,
+      build: 0.24,
+      click: 0.62,
+      softError: 0.45,
+      powerDown: 0.5
+    };
+
+    const el = {
+      video: document.getElementById("video"),
+      targetText: document.getElementById("targetText"),
+      feedback: document.getElementById("feedback"),
+      holdBar: document.getElementById("holdBar"),
+      status: document.getElementById("status"),
+      startBtn: document.getElementById("startBtn"),
+      bootGate: document.getElementById("bootGate"),
+      timer: document.getElementById("timer"),
+      snapFlash: document.getElementById("snapFlash"),
+      polaroidLayer: document.getElementById("polaroidLayer"),
+      polaroidImg: document.getElementById("polaroidImg"),
+      downloadBtn: document.getElementById("downloadBtn"),
+      captureCanvas: document.getElementById("captureCanvas"),
+      backgroundMusicAudio: document.getElementById("backgroundMusicAudio"),
+      cameraClickAudio: document.getElementById("cameraClickAudio"),
+      energyBuildAudio: document.getElementById("energyBuildAudio"),
+      softErrorAudio: document.getElementById("softErrorAudio"),
+      powerDownAudio: document.getElementById("powerDownAudio"),
+      fills: {
+        NEUTRAL: document.getElementById("bar-NEUTRAL"),
+        HAPPY: document.getElementById("bar-HAPPY"),
+        ANGRY: document.getElementById("bar-ANGRY"),
+        SURPRISED: document.getElementById("bar-SURPRISED"),
+        SAD: document.getElementById("bar-SAD")
+      },
+      values: {
+        NEUTRAL: document.getElementById("val-NEUTRAL"),
+        HAPPY: document.getElementById("val-HAPPY"),
+        ANGRY: document.getElementById("val-ANGRY"),
+        SURPRISED: document.getElementById("val-SURPRISED"),
+        SAD: document.getElementById("val-SAD")
+      }
+    };
+
+    const state = {
+      target: "NEUTRAL",
+      holdSeconds: 0,
+      active: false,
+      isBooting: false,
+      detectTimer: null,
+      audioCtx: null,
+      buildAudioActive: false,
+      bgmActive: false,
+      roundElapsedSeconds: 0,
+      lastCaptureDataUrl: "",
+      history: {
+        NEUTRAL: [],
+        HAPPY: [],
+        ANGRY: [],
+        SURPRISED: [],
+        SAD: []
+      },
+      smoothed: {
+        NEUTRAL: 0,
+        HAPPY: 0,
+        ANGRY: 0,
+        SURPRISED: 0,
+        SAD: 0
+      }
+    };
+
+    function clamp01(v) {
+      return Math.max(0, Math.min(1, v));
+    }
+
+    function resetHoldBar() {
+      el.holdBar.style.width = "0%";
+      el.holdBar.style.background = "linear-gradient(90deg, #f2ba00, #ffd700)";
+    }
+
+    function pickTarget() {
+      let next = state.target;
+      while (next === state.target) {
+        next = EMOTIONS[Math.floor(Math.random() * EMOTIONS.length)];
+      }
+      state.target = next;
+      state.holdSeconds = 0;
+      state.roundElapsedSeconds = 0;
+      el.targetText.textContent = `Match the Vibe: ${next}`;
+      resetHoldBar();
+      
+      // Trigger vibe change animations
+      const videoCard = el.video.parentElement;
+      videoCard.classList.remove('vibe-changed');
+      el.targetText.classList.remove('vibe-changed');
+      void videoCard.offsetWidth; // Trigger reflow to restart animation
+      void el.targetText.offsetWidth;
+      videoCard.classList.add('vibe-changed');
+      el.targetText.classList.add('vibe-changed');
+    }
+
+    function mapEmotions(raw) {
+      return {
+        NEUTRAL: clamp01(raw.neutral || 0),
+        HAPPY: clamp01(raw.happy || 0),
+        ANGRY: clamp01(raw.angry || 0),
+        SURPRISED: clamp01(raw.surprised || 0),
+        SAD: clamp01((raw.sad || 0) + (raw.disgusted || 0) + (raw.fearful || 0))
+      };
+    }
+
+    function pushRolling(name, value) {
+      const arr = state.history[name];
+      arr.push(value);
+      if (arr.length > SMOOTHING_WINDOW) {
+        arr.shift();
+      }
+      const avg = arr.reduce((sum, n) => sum + n, 0) / arr.length;
+      state.smoothed[name] = avg || 0;
+    }
+
+    function updateBars() {
+      for (const emotion of EMOTIONS) {
+        const pct = Math.round(state.smoothed[emotion] * 100);
+        el.fills[emotion].style.width = `${pct}%`;
+        el.values[emotion].textContent = `${pct}%`;
+
+        if (emotion === state.target) {
+          el.fills[emotion].style.background = "linear-gradient(90deg, #f3bc09, #ffd700)";
+        } else {
+          el.fills[emotion].style.background = "linear-gradient(90deg, #a68627, #d9b24d)";
+        }
+      }
+    }
+
+    function feedbackFor(v) {
+      if (v >= 0.85) return { text: "Hold it.", color: "var(--gold)" };
+      if (v >= 0.65) return { text: "Almost there...", color: "#ffe88d" };
+      if (v >= 0.4) return { text: "Breathe and focus.", color: "var(--text-muted)" };
+      return { text: "Refine your expression.", color: "var(--warn)" };
+    }
+
+    function applyAudioLevels() {
+      el.backgroundMusicAudio.volume = AUDIO_LEVELS.bgm;
+      el.energyBuildAudio.volume = AUDIO_LEVELS.build;
+      el.cameraClickAudio.volume = AUDIO_LEVELS.click;
+      el.softErrorAudio.volume = AUDIO_LEVELS.softError;
+      el.powerDownAudio.volume = AUDIO_LEVELS.powerDown;
+    }
+
+    function triggerSnapFlash() {
+      el.snapFlash.style.opacity = "1";
+      setTimeout(() => {
+        el.snapFlash.style.opacity = "0";
+      }, 100);
+    }
+
+    function synthClickFallback() {
+      if (!state.audioCtx) return;
+
+      const now = state.audioCtx.currentTime;
+      const o1 = state.audioCtx.createOscillator();
+      const g1 = state.audioCtx.createGain();
+      o1.type = "triangle";
+      o1.frequency.setValueAtTime(1800, now);
+      o1.frequency.exponentialRampToValueAtTime(380, now + 0.05);
+      g1.gain.setValueAtTime(0.0001, now);
+      g1.gain.exponentialRampToValueAtTime(0.45, now + 0.01);
+      g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+      o1.connect(g1).connect(state.audioCtx.destination);
+      o1.start(now);
+      o1.stop(now + 0.09);
+    }
+
+    async function playOneShot(audioEl, fallbackFn) {
+      try {
+        audioEl.currentTime = 0;
+        await audioEl.play();
+      } catch (err) {
+        if (fallbackFn) fallbackFn();
+      }
+    }
+
+    async function startBackgroundMusic() {
+      if (state.bgmActive) return;
+      try {
+        el.backgroundMusicAudio.loop = true;
+        await el.backgroundMusicAudio.play();
+        state.bgmActive = true;
+      } catch (err) {
+        state.bgmActive = false;
+      }
+    }
+
+    function pauseBackgroundMusic() {
+      el.backgroundMusicAudio.pause();
+      state.bgmActive = false;
+    }
+
+    async function resumeBackgroundMusic() {
+      try {
+        await el.backgroundMusicAudio.play();
+        state.bgmActive = true;
+      } catch (err) {
+        state.bgmActive = false;
+      }
+    }
+
+    async function startEnergyBuildLoop() {
+      if (state.buildAudioActive) return;
+      state.buildAudioActive = true;
+      try {
+        el.energyBuildAudio.loop = true;
+        el.energyBuildAudio.currentTime = 0;
+        await el.energyBuildAudio.play();
+      } catch (err) {
+        state.buildAudioActive = false;
+      }
+    }
+
+    function stopEnergyBuildLoop(resetTime = true) {
+      if (!state.buildAudioActive) return;
+      el.energyBuildAudio.pause();
+      if (resetTime) {
+        el.energyBuildAudio.currentTime = 0;
+      }
+      state.buildAudioActive = false;
+    }
+
+    function captureFrame() {
+      const width = el.video.videoWidth;
+      const height = el.video.videoHeight;
+      if (!width || !height) return "";
+
+      const canvas = el.captureCanvas;
+      const ctx = canvas.getContext("2d");
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw mirrored so saved image matches what player sees in mirror preview.
+      ctx.save();
+      ctx.translate(width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(el.video, 0, 0, width, height);
+      ctx.restore();
+
+      return canvas.toDataURL("image/jpeg", 0.92);
+    }
+
+    function showPolaroid(dataUrl) {
+      if (!dataUrl) return;
+      state.lastCaptureDataUrl = dataUrl;
+      el.polaroidImg.src = dataUrl;
+      el.polaroidLayer.classList.add("show");
+    }
+
+    function hidePolaroid() {
+      el.polaroidLayer.classList.remove("show");
+    }
+
+    async function triggerTimeoutSkip() {
+      state.active = false;
+      stopEnergyBuildLoop(true);
+      await playOneShot(el.softErrorAudio);
+      el.feedback.textContent = "Energy not found. Moving on.";
+      el.feedback.style.color = "var(--warn)";
+      state.holdSeconds = 0;
+      resetHoldBar();
+
+      setTimeout(() => {
+        pickTarget();
+        el.feedback.textContent = "Breathe and focus.";
+        el.feedback.style.color = "var(--text-muted)";
+        state.active = true;
+      }, 1800);
+    }
+
+    function processHold() {
+      const targetVal = state.smoothed[state.target] || 0;
+      const fb = feedbackFor(targetVal);
+      el.feedback.textContent = fb.text;
+      el.feedback.style.color = fb.color;
+
+      if (targetVal >= WIN_THRESHOLD) {
+        startEnergyBuildLoop();
+        state.holdSeconds += DETECT_INTERVAL_MS / 1000;
+      } else if (targetVal < DROP_THRESHOLD) {
+        if (state.buildAudioActive) {
+          stopEnergyBuildLoop(true);
+          playOneShot(el.powerDownAudio);
+        }
+        state.holdSeconds = Math.max(0, state.holdSeconds - 0.15);
+        if (state.holdSeconds > 0) {
+          el.feedback.textContent = "You lost it.";
+          el.feedback.style.color = "var(--danger)";
+        }
+      }
+
+      const pct = clamp01(state.holdSeconds / HOLD_SECONDS_REQUIRED) * 100;
+      el.holdBar.style.width = `${pct}%`;
+
+      if (state.holdSeconds >= HOLD_SECONDS_REQUIRED) {
+        state.active = false;
+        stopEnergyBuildLoop(true);
+        el.feedback.textContent = "Perfect. Capturing...";
+        el.feedback.style.color = "var(--gold)";
+        el.holdBar.style.background = "#ffd700";
+
+        triggerSnapFlash();
+        playOneShot(el.cameraClickAudio, synthClickFallback);
+        pauseBackgroundMusic();
+        const dataUrl = captureFrame();
+        showPolaroid(dataUrl);
+
+        setTimeout(() => {
+          hidePolaroid();
+          resumeBackgroundMusic();
+          pickTarget();
+          el.feedback.textContent = "Breathe and focus.";
+          el.feedback.style.color = "var(--text-muted)";
+          state.active = true;
+        }, 6000);
+      }
+    }
+
+    async function loadModels() {
+      el.status.textContent = "Loading models from ./models...";
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
+      ]);
+    }
+
+    async function initCamera() {
+      if (!window.isSecureContext) {
+        throw new Error("Camera requires localhost or https.");
+      }
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Camera API unavailable in this browser.");
+      }
+
+      el.status.textContent = "Requesting camera permission...";
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false
+      });
+      el.video.srcObject = stream;
+
+      await new Promise((resolve) => {
+        el.video.onloadedmetadata = async () => {
+          try {
+            await el.video.play();
+          } catch (err) {
+            console.warn("video.play warning:", err);
+          }
+          resolve();
+        };
+      });
+    }
+
+    async function unlockAudio() {
+      if (!state.audioCtx) {
+        state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (state.audioCtx.state === "suspended") {
+        await state.audioCtx.resume();
+      }
+    }
+
+    function startLoop() {
+      const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 });
+
+      state.detectTimer = setInterval(async () => {
+        if (!state.active) return;
+
+        state.roundElapsedSeconds += DETECT_INTERVAL_MS / 1000;
+        const timeRemaining = Math.max(0, Math.round(ROUND_TIMEOUT_SECONDS - state.roundElapsedSeconds));
+        el.timer.textContent = timeRemaining + "s";
+        if (state.roundElapsedSeconds >= ROUND_TIMEOUT_SECONDS) {
+          triggerTimeoutSkip();
+          return;
+        }
+
+        try {
+          const result = await faceapi.detectSingleFace(el.video, opts).withFaceExpressions();
+
+          if (!result || !result.expressions) {
+            for (const emotion of EMOTIONS) {
+              pushRolling(emotion, 0);
+            }
+            updateBars();
+            state.holdSeconds = Math.max(0, state.holdSeconds - 0.12);
+            if (state.buildAudioActive) {
+              stopEnergyBuildLoop(true);
+              playOneShot(el.powerDownAudio);
+            }
+            el.holdBar.style.width = `${clamp01(state.holdSeconds / HOLD_SECONDS_REQUIRED) * 100}%`;
+            el.feedback.textContent = "Center yourself.";
+            el.feedback.style.color = "var(--text-muted)";
+            return;
+          }
+
+          const mapped = mapEmotions(result.expressions);
+          for (const emotion of EMOTIONS) {
+            pushRolling(emotion, mapped[emotion]);
+          }
+
+          updateBars();
+          processHold();
+        } catch (err) {
+          console.error("Detection error:", err);
+          el.feedback.textContent = "Signal unstable. Hold still.";
+          el.feedback.style.color = "var(--danger)";
+        }
+      }, DETECT_INTERVAL_MS);
+    }
+
+    async function boot() {
+      if (state.isBooting || state.active) return;
+
+      state.isBooting = true;
+      el.startBtn.disabled = true;
+
+      try {
+        if (!window.faceapi) {
+          throw new Error("face-api.js failed to load.");
+        }
+
+        await unlockAudio();
+        applyAudioLevels();
+        await startBackgroundMusic();
+        await loadModels();
+        await initCamera();
+
+        pickTarget();
+        el.feedback.textContent = "Breathe and focus.";
+        state.active = true;
+        startLoop();
+        el.bootGate.classList.add("hidden");
+      } catch (err) {
+        console.error("Boot error:", err);
+        el.status.textContent = `Boot failed: ${err.message}`;
+        el.startBtn.disabled = false;
+      } finally {
+        state.isBooting = false;
+      }
+    }
+
+    function downloadCapture() {
+      if (!state.lastCaptureDataUrl) return;
+      const a = document.createElement("a");
+      const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+      a.href = state.lastCaptureDataUrl;
+      a.download = `vibe-captured-${stamp}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    window.addEventListener("beforeunload", () => {
+      if (state.detectTimer) clearInterval(state.detectTimer);
+      stopEnergyBuildLoop(true);
+      pauseBackgroundMusic();
+      const stream = el.video.srcObject;
+      if (stream && typeof stream.getTracks === "function") {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      if (state.audioCtx && state.audioCtx.state !== "closed") {
+        state.audioCtx.close();
+      }
+    });
+
+    el.startBtn.addEventListener("click", boot);
+    el.downloadBtn.addEventListener("click", downloadCapture);
+  </script>
+</body>
+</html>
