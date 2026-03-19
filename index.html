@@ -951,11 +951,86 @@
       }
     }
 
-    function downloadCapture() {
+    async function buildPolaroidDownload(sourceDataUrl) {
+      const img = new Image();
+      img.decoding = "async";
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => reject(new Error("Failed to load capture image."));
+        img.src = sourceDataUrl;
+      });
+
+      const photoW = 900;
+      const photoH = 1200;
+      const pad = 42;
+      const bottomArea = 190;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = photoW + pad * 2;
+      canvas.height = photoH + pad + bottomArea;
+
+      const ctx = canvas.getContext("2d");
+      const photoX = pad;
+      const photoY = pad;
+
+      // Polaroid paper background.
+      ctx.fillStyle = "#fdfcf8";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const srcRatio = img.width / img.height;
+      const dstRatio = photoW / photoH;
+      let sx = 0;
+      let sy = 0;
+      let sw = img.width;
+      let sh = img.height;
+
+      // Crop center to match the polaroid photo window.
+      if (srcRatio > dstRatio) {
+        sh = img.height;
+        sw = sh * dstRatio;
+        sx = (img.width - sw) / 2;
+      } else {
+        sw = img.width;
+        sh = sw / dstRatio;
+        sy = (img.height - sh) / 2;
+      }
+
+      ctx.drawImage(img, sx, sy, sw, sh, photoX, photoY, photoW, photoH);
+
+      ctx.fillStyle = "#232323";
+      ctx.textAlign = "center";
+      ctx.font = '700 46px "Inter", sans-serif';
+      ctx.fillText("VIBE CAPTURED.", canvas.width / 2, photoY + photoH + 82);
+
+      ctx.fillStyle = "#666";
+      ctx.font = '600 24px "Inter", sans-serif';
+      ctx.fillText("CALIBRATE YOUR SERENITY", canvas.width / 2, photoY + photoH + 128);
+
+      ctx.fillStyle = "#8a8a8a";
+      ctx.font = '500 20px "Inter", sans-serif';
+      const dateLabel = new Date().toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+      ctx.fillText(dateLabel, canvas.width / 2, photoY + photoH + 162);
+
+      return canvas.toDataURL("image/jpeg", 0.94);
+    }
+
+    async function downloadCapture() {
       if (!state.lastCaptureDataUrl) return;
+
+      let downloadDataUrl = state.lastCaptureDataUrl;
+      try {
+        downloadDataUrl = await buildPolaroidDownload(state.lastCaptureDataUrl);
+      } catch (err) {
+        console.warn("Polaroid render failed, using raw capture:", err);
+      }
+
       const a = document.createElement("a");
       const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
-      a.href = state.lastCaptureDataUrl;
+      a.href = downloadDataUrl;
       a.download = `vibe-captured-${stamp}.jpg`;
       document.body.appendChild(a);
       a.click();
