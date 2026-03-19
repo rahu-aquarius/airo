@@ -558,6 +558,7 @@
       bgmActive: false,
       roundElapsedSeconds: 0,
       lastCaptureDataUrl: "",
+      lastCaptureEmotion: "",
       history: {
         NEUTRAL: [],
         HAPPY: [],
@@ -811,6 +812,8 @@
         el.feedback.style.color = "var(--gold)";
         el.holdBar.style.background = "#ffd700";
 
+        state.lastCaptureEmotion = state.target;
+
         triggerSnapFlash();
         playOneShot(el.cameraClickAudio, synthClickFallback);
         pauseBackgroundMusic();
@@ -951,7 +954,7 @@
       }
     }
 
-    async function buildPolaroidDownload(sourceDataUrl) {
+    async function buildPolaroidDownload(sourceDataUrl, emotionLabel) {
       const img = new Image();
       img.decoding = "async";
       await new Promise((resolve, reject) => {
@@ -963,7 +966,7 @@
       const photoW = 900;
       const photoH = 1200;
       const pad = 42;
-      const bottomArea = 190;
+      const bottomArea = 250;
 
       const canvas = document.createElement("canvas");
       canvas.width = photoW + pad * 2;
@@ -1006,6 +1009,11 @@
       ctx.font = '600 24px "Inter", sans-serif';
       ctx.fillText("CALIBRATE YOUR SERENITY", canvas.width / 2, photoY + photoH + 128);
 
+      const cleanEmotion = emotionLabel || "UNKNOWN";
+      ctx.fillStyle = "#4b3e1b";
+      ctx.font = '800 32px "Inter", sans-serif';
+      ctx.fillText(`VIBE: ${cleanEmotion}`, canvas.width / 2, photoY + photoH + 170);
+
       ctx.fillStyle = "#8a8a8a";
       ctx.font = '500 20px "Inter", sans-serif';
       const dateLabel = new Date().toLocaleDateString(undefined, {
@@ -1013,7 +1021,7 @@
         month: "short",
         day: "numeric"
       });
-      ctx.fillText(dateLabel, canvas.width / 2, photoY + photoH + 162);
+      ctx.fillText(dateLabel, canvas.width / 2, photoY + photoH + 210);
 
       return canvas.toDataURL("image/jpeg", 0.94);
     }
@@ -1023,7 +1031,10 @@
 
       let downloadDataUrl = state.lastCaptureDataUrl;
       try {
-        downloadDataUrl = await buildPolaroidDownload(state.lastCaptureDataUrl);
+        downloadDataUrl = await buildPolaroidDownload(
+          state.lastCaptureDataUrl,
+          state.lastCaptureEmotion
+        );
       } catch (err) {
         console.warn("Polaroid render failed, using raw capture:", err);
       }
