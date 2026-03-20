@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CALIBRATE YOUR SERENITY</title>
+  <title>SAVE YOUR GOOD VIBE</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -91,7 +91,7 @@
 
     .main {
       display: grid;
-      grid-template-columns: minmax(280px, 2.2fr) minmax(260px, 1fr);
+      grid-template-columns: minmax(280px, 1.6fr) minmax(360px, 1fr);
       gap: 14px;
       min-height: 0;
     }
@@ -170,6 +170,15 @@
       min-height: 1.1rem;
     }
 
+    .hint {
+      margin-top: 6px;
+      color: #ddcc87;
+      font-size: 0.73rem;
+      min-height: 1rem;
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+
     #timer {
       position: absolute;
       top: 8px;
@@ -181,8 +190,18 @@
       text-transform: uppercase;
     }
 
+    .face-count {
+      color: #e7d9a3;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: -2px;
+      margin-bottom: 6px;
+    }
+
     .hold-track {
-      margin-top: 10px;
+      margin-top: 18px;
       width: 100%;
       height: 9px;
       border-radius: 999px;
@@ -200,7 +219,7 @@
     }
 
     .side-panel {
-      padding: 14px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -217,14 +236,14 @@
 
     .bar-row {
       display: grid;
-      grid-template-columns: 92px 1fr 42px;
-      gap: 8px;
+      grid-template-columns: 110px 1fr 50px;
+      gap: 16px;
       align-items: center;
     }
 
     .bar-label {
       color: #d5c68b;
-      font-size: 0.72rem;
+      font-size: 0.85rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       font-weight: 700;
@@ -232,7 +251,7 @@
 
     .bar-track {
       width: 100%;
-      height: 8px;
+      height: 14px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 215, 0, 0.16);
@@ -339,6 +358,31 @@
       cursor: not-allowed;
     }
 
+    .countdown-display {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 6rem;
+      font-weight: 800;
+      color: var(--gold);
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+      text-align: center;
+      z-index: 100;
+      animation: countdown-pulse 0.8s ease-out;
+    }
+
+    @keyframes countdown-pulse {
+      0% {
+        transform: translate(-50%, -50%) scale(1.8);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+
     #snapFlash {
       position: fixed;
       inset: 0;
@@ -386,16 +430,16 @@
     }
 
     .polaroid-caption {
-      margin-top: 10px;
+      margin-top: 18px;
       color: #222;
       text-transform: uppercase;
       letter-spacing: 0.16em;
-      font-size: 0.72rem;
+      font-size: 0.85rem;
       font-weight: 700;
     }
 
     #downloadBtn {
-      margin-top: 10px;
+      margin-top: 18px;
       border: 1px solid #333;
       background: #fff;
       color: #222;
@@ -410,6 +454,40 @@
 
     #captureCanvas {
       display: none;
+    }
+
+    .hud-photo-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 2px solid var(--gold);
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--gold);
+      border-radius: 999px;
+      padding: 12px 24px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 200ms ease;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .hud-photo-btn:hover {
+      background: rgba(255, 215, 0, 0.25);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+      transform: translateX(-50%) scale(1.05);
+    }
+
+    .hud-photo-btn:active {
+      transform: translateX(-50%) scale(0.95);
+    }
+
+    .hud-photo-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .hidden {
@@ -438,27 +516,29 @@
 </head>
 <body>
   <main class="kiosk">
-    <header class="header">CALIBRATE YOUR SERENITY</header>
+    <header class="header">SAVE YOUR GOOD VIBE</header>
 
     <section class="main">
       <div class="video-card">
         <video id="video" autoplay muted playsinline></video>
 
         <div class="hud-overlay" aria-live="polite">
-          <div id="timer">20s</div>
-          <div id="targetText" class="target">Match the Vibe: ...</div>
+          <div id="timer">30s</div>
+          <div id="countdownDisplay" class="countdown-display" style="display:none;"></div>
+          <div id="targetText" class="target">Show your Vibe: ...</div>
+          <div id="hintText" class="hint">Hint: Relax face and look at camera.</div>
           <div id="feedback" class="feedback">Breathe and focus.</div>
           <div class="hold-track"><div id="holdBar"></div></div>
+          
         </div>
       </div>
 
       <aside class="side-panel" aria-label="Emotion levels">
         <div class="panel-title">Signal Quality</div>
-        <div class="bar-row"><div class="bar-label">NEUTRAL</div><div class="bar-track"><div id="bar-NEUTRAL" class="bar-fill"></div></div><div id="val-NEUTRAL" class="bar-val">0%</div></div>
+        <div id="faceCount" class="face-count">Faces: 0</div>
+        <div class="bar-row"><div class="bar-label">CALM</div><div class="bar-track"><div id="bar-CALM" class="bar-fill"></div></div><div id="val-CALM" class="bar-val">0%</div></div>
         <div class="bar-row"><div class="bar-label">HAPPY</div><div class="bar-track"><div id="bar-HAPPY" class="bar-fill"></div></div><div id="val-HAPPY" class="bar-val">0%</div></div>
-        <div class="bar-row"><div class="bar-label">ANGRY</div><div class="bar-track"><div id="bar-ANGRY" class="bar-fill"></div></div><div id="val-ANGRY" class="bar-val">0%</div></div>
         <div class="bar-row"><div class="bar-label">SURPRISED</div><div class="bar-track"><div id="bar-SURPRISED" class="bar-fill"></div></div><div id="val-SURPRISED" class="bar-val">0%</div></div>
-        <div class="bar-row"><div class="bar-label">SAD</div><div class="bar-track"><div id="bar-SAD" class="bar-fill"></div></div><div id="val-SAD" class="bar-val">0%</div></div>
       </aside>
     </section>
 
@@ -473,6 +553,7 @@
       <div class="boot-title">Begin Calibration</div>
       <div id="status" class="boot-status">Models in ./models and audio in ./sounds. Camera and audio unlock after your tap.</div>
       <button id="startBtn" type="button">Begin Calibration</button>
+      
     </div>
   </section>
 
@@ -497,13 +578,18 @@
   <script src="https://unpkg.com/face-api.js@0.22.2/dist/face-api.min.js"></script>
   <script>
     const MODEL_URL = "./models";
-    const EMOTIONS = ["NEUTRAL", "HAPPY", "ANGRY", "SURPRISED", "SAD"];
+    const EMOTIONS = ["CALM", "HAPPY", "SURPRISED"];
     const DETECT_INTERVAL_MS = 100;
     const SMOOTHING_WINDOW = 10;
-    const WIN_THRESHOLD = 0.85;
-    const DROP_THRESHOLD = 0.80;
-    const HOLD_SECONDS_REQUIRED = 3;
-    const ROUND_TIMEOUT_SECONDS = 20;
+    const WIN_THRESHOLD = 0.72;
+    const DROP_THRESHOLD = 0.58;
+    const HOLD_SECONDS_REQUIRED = 1;
+    const ROUND_TIMEOUT_SECONDS = 30;
+    const TARGET_HINTS = {
+      CALM: "Hint: Relax face, closed lips, steady gaze.",
+      HAPPY: "Hint: Smile with raised cheeks and soft eyes.",
+      SURPRISED: "Hint: Raise brows, open eyes wide, drop jaw."
+    };
     const AUDIO_LEVELS = {
       bgm: 0.32,
       build: 0.24,
@@ -515,12 +601,15 @@
     const el = {
       video: document.getElementById("video"),
       targetText: document.getElementById("targetText"),
+      faceCount: document.getElementById("faceCount"),
+      hintText: document.getElementById("hintText"),
       feedback: document.getElementById("feedback"),
       holdBar: document.getElementById("holdBar"),
       status: document.getElementById("status"),
       startBtn: document.getElementById("startBtn"),
       bootGate: document.getElementById("bootGate"),
       timer: document.getElementById("timer"),
+      countdownDisplay: document.getElementById("countdownDisplay"),
       snapFlash: document.getElementById("snapFlash"),
       polaroidLayer: document.getElementById("polaroidLayer"),
       polaroidImg: document.getElementById("polaroidImg"),
@@ -532,23 +621,19 @@
       softErrorAudio: document.getElementById("softErrorAudio"),
       powerDownAudio: document.getElementById("powerDownAudio"),
       fills: {
-        NEUTRAL: document.getElementById("bar-NEUTRAL"),
+        CALM: document.getElementById("bar-CALM"),
         HAPPY: document.getElementById("bar-HAPPY"),
-        ANGRY: document.getElementById("bar-ANGRY"),
-        SURPRISED: document.getElementById("bar-SURPRISED"),
-        SAD: document.getElementById("bar-SAD")
+        SURPRISED: document.getElementById("bar-SURPRISED")
       },
       values: {
-        NEUTRAL: document.getElementById("val-NEUTRAL"),
+        CALM: document.getElementById("val-CALM"),
         HAPPY: document.getElementById("val-HAPPY"),
-        ANGRY: document.getElementById("val-ANGRY"),
-        SURPRISED: document.getElementById("val-SURPRISED"),
-        SAD: document.getElementById("val-SAD")
+        SURPRISED: document.getElementById("val-SURPRISED")
       }
     };
 
     const state = {
-      target: "NEUTRAL",
+      target: "CALM",
       holdSeconds: 0,
       active: false,
       isBooting: false,
@@ -559,24 +644,51 @@
       roundElapsedSeconds: 0,
       lastCaptureDataUrl: "",
       lastCaptureEmotion: "",
+      lastDetections: [],
+      captureHistory: [],
+      photoMode: false,
+      countdownValue: 0,
+      countdownTimer: null,
+      captureWindowActive: false,
+      capturedFramesThisWindow: [],
+      autoSmileCountdownActive: false,
+      autoSmileCountdown: 0,
+      landmarksReady: false,
       history: {
-        NEUTRAL: [],
+        CALM: [],
         HAPPY: [],
-        ANGRY: [],
-        SURPRISED: [],
-        SAD: []
+        SURPRISED: []
       },
       smoothed: {
-        NEUTRAL: 0,
+        CALM: 0,
         HAPPY: 0,
-        ANGRY: 0,
-        SURPRISED: 0,
-        SAD: 0
+        SURPRISED: 0
       }
     };
 
     function clamp01(v) {
       return Math.max(0, Math.min(1, v));
+    }
+
+    function isStrongFaceDetection(detection, frameW, frameH) {
+      if (!detection || !detection.detection || !detection.detection.box) return false;
+      const box = detection.detection.box;
+      const score = typeof detection.detection.score === "number" ? detection.detection.score : 0;
+      if (score < 0.45) return false;
+      if (box.width < frameW * 0.08 || box.height < frameH * 0.12) return false;
+      return true;
+    }
+
+    function normalizeEmotionMap(scores) {
+      const total = Math.max(
+        0.0001,
+        (scores.CALM || 0) + (scores.HAPPY || 0) + (scores.SURPRISED || 0) 
+      );
+      return {
+        CALM: clamp01((scores.CALM || 0) / total),
+        HAPPY: clamp01((scores.HAPPY || 0) / total),
+        SURPRISED: clamp01((scores.SURPRISED || 0) / total),
+      };
     }
 
     function resetHoldBar() {
@@ -592,7 +704,9 @@
       state.target = next;
       state.holdSeconds = 0;
       state.roundElapsedSeconds = 0;
-      el.targetText.textContent = `Match the Vibe: ${next}`;
+      el.targetText.textContent = `Show your Vibe: ${next}`;
+      el.timer.textContent = ROUND_TIMEOUT_SECONDS + "s";
+      el.hintText.textContent = TARGET_HINTS[next] || "Hint: Match the target emotion.";
       resetHoldBar();
       
       // Trigger vibe change animations
@@ -605,14 +719,130 @@
       el.targetText.classList.add('vibe-changed');
     }
 
-    function mapEmotions(raw) {
+    function getMouthOpenScore(landmarks) {
+      if (!landmarks || typeof landmarks.getMouth !== "function") return 0;
+      const mouth = landmarks.getMouth();
+      if (!mouth || mouth.length < 8) return 0;
+
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minY = Infinity;
+      let maxY = -Infinity;
+      for (const p of mouth) {
+        if (!p) continue;
+        minX = Math.min(minX, p.x);
+        maxX = Math.max(maxX, p.x);
+        minY = Math.min(minY, p.y);
+        maxY = Math.max(maxY, p.y);
+      }
+      if (!isFinite(minX) || !isFinite(maxX) || !isFinite(minY) || !isFinite(maxY)) return 0;
+      const w = Math.max(1, maxX - minX);
+      const h = Math.max(0, maxY - minY);
+      return clamp01((h / w) * 2.6);
+    }
+
+    function getBrowTensionScore(landmarks) {
+      if (!landmarks) return 0;
+      if (typeof landmarks.getLeftEye !== "function" || typeof landmarks.getRightEye !== "function") return 0;
+      if (typeof landmarks.getLeftEyeBrow !== "function" || typeof landmarks.getRightEyeBrow !== "function") return 0;
+
+      const leftEye = landmarks.getLeftEye();
+      const rightEye = landmarks.getRightEye();
+      const leftBrow = landmarks.getLeftEyeBrow();
+      const rightBrow = landmarks.getRightEyeBrow();
+      if (!leftEye?.length || !rightEye?.length || !leftBrow?.length || !rightBrow?.length) return 0;
+
+      const avgY = (pts) => pts.reduce((s, p) => s + p.y, 0) / pts.length;
+      const minY = (pts) => pts.reduce((m, p) => Math.min(m, p.y), Infinity);
+      const eyeWidth = Math.max(1, Math.abs(rightEye[3].x - rightEye[0].x) + Math.abs(leftEye[3].x - leftEye[0].x));
+
+      const eyeY = (avgY(leftEye) + avgY(rightEye)) / 2;
+      const browY = (minY(leftBrow) + minY(rightBrow)) / 2;
+      const dist = Math.max(0, eyeY - browY);
+      const normalized = dist / eyeWidth;
+
+      // Lower brow-to-eye distance generally means more tension.
+      return clamp01((0.115 - normalized) * 18);
+    }
+
+    function mapEmotions(raw, landmarks) {
+      const neutral = clamp01(raw.neutral || 0);
+      const happy = clamp01(raw.happy || 0);
+      const surprised = clamp01(raw.surprised || 0);
+      const mouthOpen = getMouthOpenScore(landmarks);
+      const closedMouth = clamp01(1 - mouthOpen * 1.1);
+      
+      const calmRaw = clamp01(neutral);
+      const happyRaw = clamp01(happy);
+      const surprisedRaw = clamp01(surprised);
+
+      return normalizeEmotionMap({
+        CALM: calmRaw,
+        HAPPY: happyRaw,
+        SURPRISED: surprisedRaw
+      });
+    }
+
+    function aggregateGroupEmotions(detections) {
+      if (!detections || detections.length === 0) {
+        return { CALM: 0, HAPPY: 0, SURPRISED: 0 };
+      }
+
+      const frameW = el.video.videoWidth || 1;
+      const frameH = el.video.videoHeight || 1;
+
+      let validFaces = 0;
+      let minScores = { CALM: 1, HAPPY: 1, SURPRISED: 1 };
+
+      for (const detection of detections) {
+        if (!detection || !detection.expressions) continue;
+        
+        const box = detection.detection && detection.detection.box ? detection.detection.box : null;
+        if (!box) continue;
+        
+        const area = box.width * box.height;
+        const screenArea = frameW * frameH;
+        
+        // Skip tiny distant background faces
+        if (detections.length > 1 && area < screenArea * 0.015) {
+          continue;
+        }
+
+        const mapped = mapEmotions(detection.expressions, detection.landmarks);
+        minScores.CALM = Math.min(minScores.CALM, mapped.CALM);
+        minScores.HAPPY = Math.min(minScores.HAPPY, mapped.HAPPY);
+        minScores.SURPRISED = Math.min(minScores.SURPRISED, mapped.SURPRISED);
+        validFaces++;
+      }
+
+      if (validFaces === 0) {
+        return { CALM: 0, HAPPY: 0, SURPRISED: 0 };
+      }
+
       return {
-        NEUTRAL: clamp01(raw.neutral || 0),
-        HAPPY: clamp01(raw.happy || 0),
-        ANGRY: clamp01(raw.angry || 0),
-        SURPRISED: clamp01(raw.surprised || 0),
-        SAD: clamp01((raw.sad || 0) + (raw.disgusted || 0) + (raw.fearful || 0))
+        CALM: minScores.CALM,
+        HAPPY: minScores.HAPPY,
+        SURPRISED: minScores.SURPRISED
       };
+    }
+
+    function dominantEmotionForPhoto(mapped) {
+      // Photo mode calibration for easy, upbeat expressions.
+      const tuned = {
+        CALM: clamp01((mapped.CALM || 0) * 0.95),
+        HAPPY: clamp01((mapped.HAPPY || 0) * 1.04),
+        SURPRISED: clamp01((mapped.SURPRISED || 0) * 1.08)
+      };
+
+      let bestName = "CALM";
+      let bestScore = -1;
+      for (const emotion of EMOTIONS) {
+        const score = tuned[emotion] || 0;
+        if (score > bestScore) {
+          bestScore = score;
+          bestName = emotion;
+        }
+      }return bestName;
     }
 
     function pushRolling(name, value) {
@@ -753,6 +983,72 @@
       return canvas.toDataURL("image/jpeg", 0.92);
     }
 
+    function captureFacePolaroids(detections) {
+      const width = el.video.videoWidth;
+      const height = el.video.videoHeight;
+      if (!width || !height || !detections || !detections.length) return [];
+
+      const canvas = el.captureCanvas;
+      const ctx = canvas.getContext("2d");
+      canvas.width = width;
+      canvas.height = height;
+
+      // Mirror once; all face crops come from this mirrored frame.
+      ctx.save();
+      ctx.translate(width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(el.video, 0, 0, width, height);
+      ctx.restore();
+
+      const sorted = [...detections]
+        .filter((d) => d && d.detection && d.detection.box && d.expressions)
+        .sort((a, b) => {
+          const areaA = a.detection.box.width * a.detection.box.height;
+          const areaB = b.detection.box.width * b.detection.box.height;
+          return areaB - areaA;
+        })
+        .slice(0, 2);
+
+      const crops = [];
+      for (const det of sorted) {
+        const box = det.detection.box;
+        const cx = box.x + box.width / 2;
+        const cy = box.y + box.height / 2;
+        const mirroredCx = width - cx;
+        const targetRatio = 3 / 4;
+
+        const maxCenteredW = Math.min(width, 2 * Math.min(mirroredCx, width - mirroredCx));
+        const maxCenteredH = Math.min(height, 2 * Math.min(cy, height - cy));
+
+        let sw = Math.min(box.width * 3.2, maxCenteredW);
+        let sh = sw / targetRatio;
+        if (sh > maxCenteredH) {
+          sh = maxCenteredH;
+          sw = sh * targetRatio;
+        }
+
+        const sx = mirroredCx - sw / 2;
+        const sy = cy - sh / 2;
+
+        if (sw < 40 || sh < 40) continue;
+
+        const out = document.createElement("canvas");
+        out.width = Math.round(sw);
+        out.height = Math.round(sh);
+        const outCtx = out.getContext("2d");
+        outCtx.drawImage(canvas, sx, sy, sw, sh, 0, 0, out.width, out.height);
+
+        const mapped = mapEmotions(det.expressions, det.landmarks);
+        crops.push({
+          dataUrl: out.toDataURL("image/jpeg", 0.92),
+          emotion: dominantEmotionFromMap(mapped),
+          capturedAt: Date.now()
+        });
+      }
+
+      return crops;
+    }
+
     function showPolaroid(dataUrl) {
       if (!dataUrl) return;
       state.lastCaptureDataUrl = dataUrl;
@@ -768,7 +1064,7 @@
       state.active = false;
       stopEnergyBuildLoop(true);
       await playOneShot(el.softErrorAudio);
-      el.feedback.textContent = "Energy not found. Moving on.";
+      el.feedback.textContent = "Energy not found. Vibe changed.";
       el.feedback.style.color = "var(--warn)";
       state.holdSeconds = 0;
       resetHoldBar();
@@ -795,7 +1091,7 @@
           stopEnergyBuildLoop(true);
           playOneShot(el.powerDownAudio);
         }
-        state.holdSeconds = Math.max(0, state.holdSeconds - 0.15);
+        state.holdSeconds = Math.max(0, state.holdSeconds - 0.3);
         if (state.holdSeconds > 0) {
           el.feedback.textContent = "You lost it.";
           el.feedback.style.color = "var(--danger)";
@@ -818,7 +1114,17 @@
         playOneShot(el.cameraClickAudio, synthClickFallback);
         pauseBackgroundMusic();
         const dataUrl = captureFrame();
+        state.captureHistory.push({
+          dataUrl,
+          emotion: state.target,
+          capturedAt: Date.now()
+        });
+        state.lastCaptureDataUrl = dataUrl;
         showPolaroid(dataUrl);
+
+        if (state.captureHistory.length > 8) {
+          state.captureHistory = state.captureHistory.slice(-8);
+        }
 
         setTimeout(() => {
           hidePolaroid();
@@ -837,6 +1143,12 @@
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
         faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
       ]);
+      try {
+        await faceapi.nets.faceLandmark68TinyNet.loadFromUri(MODEL_URL);
+        state.landmarksReady = true;
+      } catch (err) {
+        state.landmarksReady = false;
+      }
     }
 
     async function initCamera() {
@@ -876,7 +1188,7 @@
     }
 
     function startLoop() {
-      const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.5 });
+      const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.45 });
 
       state.detectTimer = setInterval(async () => {
         if (!state.active) return;
@@ -890,9 +1202,17 @@
         }
 
         try {
-          const result = await faceapi.detectSingleFace(el.video, opts).withFaceExpressions();
+          const results = await faceapi.detectAllFaces(el.video, opts).withFaceExpressions();
+          state.lastDetections = results || [];
+          const faceCount = results ? results.length : 0;
+          el.faceCount.textContent = `Faces: ${faceCount}`;
+          const baseHint = TARGET_HINTS[state.target] || "Hint: Match the target emotion.";
+          el.hintText.textContent = faceCount > 1
+            ? `Group mode: ${faceCount} faces. ${baseHint}`
+            : baseHint;
 
-          if (!result || !result.expressions) {
+          if (!results || !results.length) {
+            state.lastDetections = [];
             for (const emotion of EMOTIONS) {
               pushRolling(emotion, 0);
             }
@@ -905,10 +1225,12 @@
             el.holdBar.style.width = `${clamp01(state.holdSeconds / HOLD_SECONDS_REQUIRED) * 100}%`;
             el.feedback.textContent = "Center yourself.";
             el.feedback.style.color = "var(--text-muted)";
+            el.faceCount.textContent = "Faces: 0";
+            el.hintText.textContent = "No face detected. Step into frame.";
             return;
           }
 
-          const mapped = mapEmotions(result.expressions);
+          const mapped = aggregateGroupEmotions(results);
           for (const emotion of EMOTIONS) {
             pushRolling(emotion, mapped[emotion]);
           }
@@ -921,6 +1243,419 @@
           el.feedback.style.color = "var(--danger)";
         }
       }, DETECT_INTERVAL_MS);
+    }
+
+    async function startPhotoModeCountdown() {
+      // Disable buttons during countdown
+      el.startBtn.disabled = true;
+      el.photoModeBtn.disabled = true;
+      state.photoMode = true;
+
+      // Start background music
+      await startBackgroundMusic();
+
+      // Countdown: 3, 2, 1, "Pay Attention", "Begin"
+      const sequence = ["3", "2", "1", "Pay Attention", "Begin"];
+      
+      for (let i = 0; i < sequence.length; i++) {
+        const text = sequence[i];
+        el.countdownDisplay.textContent = text;
+        el.countdownDisplay.style.display = "block";
+        
+        // Play energy build for numeric counting
+        if (text !== "Pay Attention" && text !== "Begin") {
+          await playOneShot(el.energyBuildAudio);
+        }
+        
+        // Wait 1 second before next
+        if (i < sequence.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+
+      // Hide countdown display and start capture window
+      el.countdownDisplay.style.display = "none";
+      await startPhotoCaptureWindow();
+    }
+
+    async function startPhotoCaptureWindow() {
+      // Clear any previous frames
+      state.capturedFramesThisWindow = [];
+      state.captureWindowActive = true;
+      
+      el.hintText.textContent = "Capturing...";
+      el.feedback.textContent = "Hold still!";
+      el.feedback.style.color = "var(--gold)";
+
+      // Collect detections for 1 second (~10 frames at 100ms interval)
+      const captureStartTime = Date.now();
+      const captureDurationMs = 1000;
+
+      const captureCheckInterval = setInterval(async () => {
+        if (Date.now() - captureStartTime >= captureDurationMs) {
+          clearInterval(captureCheckInterval);
+          state.captureWindowActive = false;
+          
+          // Process captured frames and deduplicate faces
+          await processPhotoCaptureFrames();
+          return;
+        }
+
+        // Collect current frame's detections
+        try {
+          const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.42 });
+          let results = [];
+          if (state.landmarksReady) {
+            results = await faceapi.detectAllFaces(el.video, opts).withFaceLandmarks(true).withFaceExpressions();
+          } else {
+            results = await faceapi.detectAllFaces(el.video, opts).withFaceExpressions();
+          }
+          const frameW = el.video.videoWidth || 1;
+          const frameH = el.video.videoHeight || 1;
+          results = (results || []).filter((det) => isStrongFaceDetection(det, frameW, frameH));
+          if (results && results.length) {
+            state.capturedFramesThisWindow.push(results);
+          }
+        } catch (err) {
+          console.error("Capture frame error:", err);
+        }
+      }, 100);
+    }
+
+    function deduplicateFaceDetections(allFrames) {
+      // Group faces by position proximity across frames
+      // A face is the same person if position is similar across multiple frames
+      const faceGroups = [];
+      const POSITION_THRESHOLD = 80; // pixels
+
+      for (const frame of allFrames) {
+        for (const detection of frame) {
+          if (!detection || !detection.detection || !detection.detection.box) continue;
+
+          const box = detection.detection.box;
+          const faceCenter = {
+            x: box.x + box.width / 2,
+            y: box.y + box.height / 2,
+            box: box,
+            expressions: detection.expressions,
+            landmarks: detection.landmarks || null,
+            score: detection.detection.score || 1
+          };
+
+          // Find if this face belongs to an existing group
+          let foundGroup = false;
+          for (const group of faceGroups) {
+            const lastFace = group[group.length - 1];
+            const dist = Math.sqrt(
+              Math.pow(faceCenter.x - lastFace.x, 2) +
+              Math.pow(faceCenter.y - lastFace.y, 2)
+            );
+
+            if (dist < POSITION_THRESHOLD) {
+              group.push(faceCenter);
+              foundGroup = true;
+              break;
+            }
+          }
+
+          if (!foundGroup) {
+            faceGroups.push([faceCenter]);
+          }
+        }
+      }
+
+      return faceGroups;
+    }
+
+    async function processPhotoCaptureFrames() {
+      const faceGroups = deduplicateFaceDetections(state.capturedFramesThisWindow);
+      const uniquePeopleCount = faceGroups.length;
+
+      el.feedback.textContent = `Detected ${uniquePeopleCount} person${uniquePeopleCount !== 1 ? "s" : ""}. Processing...`;
+      el.feedback.style.color = "var(--gold)";
+
+      // Capture one representative face per group
+      const photoCaptures = [];
+      
+      for (let i = 0; i < faceGroups.length && i < 8; i++) {
+        const group = faceGroups[i];
+        if (group.length === 0) continue;
+
+        // Pick the frame with the strongest/clearest expressions (highest detection score + best emotion confidence)
+        let bestFaceIdx = 0;
+        let bestScore = -Infinity;
+        
+        for (let j = 0; j < group.length; j++) {
+          const face = group[j];
+          const exprMap = mapEmotions(face.expressions, face.landmarks);
+          // Score = face detection confidence + max emotion confidence
+          // This picks faces that are clearly visible AND have clear emotions
+          const maxEmotionConf = Math.max(
+            exprMap.CALM, exprMap.HAPPY, exprMap.SURPRISED
+          );
+          const combinedScore = (face.score || 1) * 0.5 + maxEmotionConf * 0.5;
+          
+          if (combinedScore > bestScore) {
+            bestScore = combinedScore;
+            bestFaceIdx = j;
+          }
+        }
+        
+        const representativeFace = group[bestFaceIdx];
+
+        // Capture this face with proper framing
+        const faceDataUrl = await captureSingleFace(representativeFace);
+        if (faceDataUrl) {
+          const mapped = mapEmotions(representativeFace.expressions, representativeFace.landmarks);
+          
+          photoCaptures.push({
+            dataUrl: faceDataUrl,
+            emotion: dominantEmotionForPhoto(mapped),
+            capturedAt: Date.now()
+          });
+        }
+      }
+
+      if (photoCaptures.length === 0) {
+        el.feedback.textContent = "No faces detected. Try again.";
+        el.feedback.style.color = "var(--danger)";
+        setTimeout(() => resetPhotoMode(), 2000);
+        return;
+      }
+
+      // Store captures and show result
+      state.captureHistory.push(...photoCaptures);
+      triggerSnapFlash();
+      playOneShot(el.cameraClickAudio, synthClickFallback);
+
+      // Show first captured face
+      showPolaroid(photoCaptures[0].dataUrl);
+      el.feedback.textContent = `Captured ${photoCaptures.length} vibe${photoCaptures.length !== 1 ? "s" : ""}!`;
+      el.feedback.style.color = "var(--gold)";
+
+      // After 3 seconds, reset for next photo
+      setTimeout(() => {
+        hidePolaroid();
+        resetPhotoMode();
+      }, 3000);
+    }
+
+    async function captureSingleFace(faceData) {
+      // Capture with a fixed centered 3:4 frame around face center and keep it
+      // strictly inside video bounds to prevent out-of-frame cuts.
+      const width = el.video.videoWidth;
+      const height = el.video.videoHeight;
+      if (!width || !height) return "";
+
+      const canvas = el.captureCanvas;
+      const ctx = canvas.getContext("2d");
+      canvas.width = width;
+      canvas.height = height;
+
+      // Mirror the frame
+      ctx.save();
+      ctx.translate(width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(el.video, 0, 0, width, height);
+      ctx.restore();
+
+      const box = faceData.box;
+      const targetRatio = 3 / 4;
+      const cx = box.x + box.width / 2;
+      const cy = box.y + box.height / 2;
+      const mirroredCx = width - cx;
+
+      const maxCenteredW = Math.min(width, 2 * Math.min(mirroredCx, width - mirroredCx));
+      const maxCenteredH = Math.min(height, 2 * Math.min(cy, height - cy));
+
+      let sw = Math.min(box.width * 3.8, maxCenteredW);
+      let sh = sw / targetRatio;
+      if (sh > maxCenteredH) {
+        sh = maxCenteredH;
+        sw = sh * targetRatio;
+      }
+
+      // Ensure minimum useful crop even near edges.
+      const minW = Math.min(width, box.width * 1.4);
+      const minH = minW / targetRatio;
+      if (sw < minW || sh < minH) {
+        sw = Math.max(sw, Math.min(minW, maxCenteredW));
+        sh = sw / targetRatio;
+        if (sh > maxCenteredH) {
+          sh = maxCenteredH;
+          sw = sh * targetRatio;
+        }
+      }
+
+      const sx = mirroredCx - sw / 2;
+      const sy = cy - sh / 2;
+
+      if (sw < 40 || sh < 40) return "";
+
+      const out = document.createElement("canvas");
+      out.width = 900;
+      out.height = 1200;
+      const outCtx = out.getContext("2d");
+      outCtx.drawImage(canvas, sx, sy, sw, sh, 0, 0, out.width, out.height);
+
+      return out.toDataURL("image/jpeg", 0.92);
+    }
+
+    function resetPhotoMode() {
+      state.photoMode = false;
+      state.capturedFramesThisWindow = [];
+      state.captureWindowActive = false;
+      state.countdownValue = 0;
+        state.autoSmileCountdownActive = false;
+        state.autoSmileCountdown = 0;
+      
+        el.hintText.textContent = "Ready for another photo? Tap button or smile!";
+      el.feedback.textContent = "Breathe and focus.";
+      el.feedback.style.color = "var(--text-muted)";
+      el.countdownDisplay.style.display = "none";
+
+        el.hudPhotoBtn.disabled = false;
+      el.startBtn.disabled = false;
+      el.photoModeBtn.disabled = false;
+      
+        // Restart auto-smile detection
+        state.photoMode = true;
+        startAutoSmileDetection();
+    }
+
+    async function bootPhotoMode() {
+      if (state.isBooting || state.photoMode) return;
+
+      state.isBooting = true;
+      el.startBtn.disabled = true;
+      el.photoModeBtn.disabled = true;
+
+      try {
+        if (!window.faceapi) {
+          throw new Error("face-api.js failed to load.");
+        }
+
+        await unlockAudio();
+        applyAudioLevels();
+        await loadModels();
+        await initCamera();
+
+        el.feedback.textContent = "Camera ready. Position yourself.";
+        el.hintText.textContent = "When ready, tap the button below or smile!";
+        el.targetText.style.display = "none";
+        el.timer.style.display = "none";
+        el.holdBar.parentElement.style.display = "none";
+
+        // Hide emotion bars
+        Array.from(document.querySelectorAll(".bar-row")).forEach(el => el.style.display = "none");
+        document.querySelector(".panel-title").style.display = "none";
+
+        el.bootGate.classList.add("hidden");
+        
+        // Show HUD photo button
+        el.hudPhotoBtn.style.display = "block";
+        el.hudPhotoBtn.disabled = false;
+        el.hudPhotoBtn.addEventListener("click", startPhotoModeCountdown);
+        
+        // Start auto-smile detection loop
+        state.photoMode = true;
+        startAutoSmileDetection();
+
+      } catch (err) {
+        console.error("Photo mode boot error:", err);
+        el.status.textContent = `Boot failed: ${err.message}`;
+        el.startBtn.disabled = false;
+        el.photoModeBtn.disabled = false;
+      } finally {
+        state.isBooting = false;
+      }
+    }
+
+    function startAutoSmileDetection() {
+      // Monitor for smiling faces and auto-trigger countdown
+      const opts = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.42 });
+      let smileFrameCount = 0;
+      const SMILE_THRESHOLD_FRAMES = 5; // Need 5+ consecutive frames of smiling
+      const SMILE_CONFIDENCE = 0.6; // 60% happy confidence
+
+      const smileCheckInterval = setInterval(async () => {
+        if (!state.photoMode || state.autoSmileCountdownActive) return; // Stop if mode exits or countdown started
+
+        try {
+          let results = [];
+          if (state.landmarksReady) {
+            results = await faceapi.detectAllFaces(el.video, opts).withFaceLandmarks(true).withFaceExpressions();
+          } else {
+            results = await faceapi.detectAllFaces(el.video, opts).withFaceExpressions();
+          }
+          const frameW = el.video.videoWidth || 1;
+          const frameH = el.video.videoHeight || 1;
+          results = (results || []).filter((det) => isStrongFaceDetection(det, frameW, frameH));
+          if (!results || !results.length) {
+            smileFrameCount = 0;
+            return;
+          }
+
+          // Check if all/most people are smiling
+          const smilingCount = results.filter(det => {
+            const mapped = mapEmotions(det.expressions, det.landmarks);
+            return mapped.HAPPY >= SMILE_CONFIDENCE;
+          }).length;
+
+          const smileRatio = smilingCount / results.length;
+          
+          if (smileRatio >= 0.7) {
+            // 70% or more people smiling
+            smileFrameCount++;
+            if (smileFrameCount >= SMILE_THRESHOLD_FRAMES && !state.autoSmileCountdownActive) {
+              // Auto-trigger countdown
+              clearInterval(smileCheckInterval);
+              startAutoSmileCountdown();
+              return;
+            }
+          } else {
+            smileFrameCount = 0; // Reset if not smiling anymore
+          }
+        } catch (err) {
+          console.error("Smile detection error:", err);
+        }
+      }, 100);
+
+      // Clean up on photo mode exit
+      const checkExitInterval = setInterval(() => {
+        if (!state.photoMode) {
+          clearInterval(smileCheckInterval);
+          clearInterval(checkExitInterval);
+        }
+      }, 500);
+    }
+
+    async function startAutoSmileCountdown() {
+      state.autoSmileCountdownActive = true;
+      el.hudPhotoBtn.disabled = true;
+      el.feedback.textContent = "Smile detected!";
+      el.feedback.style.color = "var(--gold)";
+      el.hintText.textContent = "Keep smiling!";
+
+      // Play energy sound
+      await playOneShot(el.energyBuildAudio);
+
+      // 3-second countdown
+      state.autoSmileCountdown = 3;
+      const countdownInterval = setInterval(() => {
+        el.countdownDisplay.textContent = state.autoSmileCountdown;
+        el.countdownDisplay.style.display = "block";
+        
+        if (state.autoSmileCountdown <= 1) {
+          clearInterval(countdownInterval);
+          el.countdownDisplay.style.display = "none";
+          state.autoSmileCountdown = 0;
+          // Auto-start capture
+          startPhotoCaptureWindow();
+          return;
+        }
+        state.autoSmileCountdown--;
+      }, 1000);
     }
 
     async function boot() {
@@ -954,87 +1689,223 @@
       }
     }
 
-    async function buildPolaroidDownload(sourceDataUrl, emotionLabel) {
-      const img = new Image();
-      img.decoding = "async";
-      await new Promise((resolve, reject) => {
-        img.onload = resolve;
-        img.onerror = () => reject(new Error("Failed to load capture image."));
-        img.src = sourceDataUrl;
-      });
-
-      const photoW = 900;
-      const photoH = 1200;
-      const pad = 42;
-      const bottomArea = 250;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = photoW + pad * 2;
-      canvas.height = photoH + pad + bottomArea;
-
-      const ctx = canvas.getContext("2d");
-      const photoX = pad;
-      const photoY = pad;
-
-      // Polaroid paper background.
-      ctx.fillStyle = "#fdfcf8";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const srcRatio = img.width / img.height;
-      const dstRatio = photoW / photoH;
-      let sx = 0;
-      let sy = 0;
-      let sw = img.width;
-      let sh = img.height;
-
-      // Crop center to match the polaroid photo window.
-      if (srcRatio > dstRatio) {
-        sh = img.height;
-        sw = sh * dstRatio;
-        sx = (img.width - sw) / 2;
-      } else {
-        sw = img.width;
-        sh = sw / dstRatio;
-        sy = (img.height - sh) / 2;
+    async function buildPolaroidDownload(captures) {
+      const activeCaptures = (captures || []).filter((item) => item && item.dataUrl);
+      if (!activeCaptures.length) {
+        throw new Error("No captures available.");
       }
 
-      ctx.drawImage(img, sx, sy, sw, sh, photoX, photoY, photoW, photoH);
+      // Use the most recent captures (up to 8)
+      const selected = activeCaptures.slice(-8);
 
-      ctx.fillStyle = "#232323";
+      const loaded = await Promise.all(
+        selected.map(async (item) => {
+          const img = new Image();
+          img.decoding = "async";
+          await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = () => reject(new Error("Failed to load capture image."));
+            img.src = item.dataUrl;
+          });
+          return {
+            img,
+            emotion: item.emotion || "UNKNOWN"
+          };
+        })
+      );
+
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      // For 1 person: vertical single Polaroid
+      if (loaded.length === 1) {
+        const single = loaded[0];
+        const photoW = 900;
+        const photoH = 1200;
+        const pad = 42;
+        const bottomArea = 250;
+
+        canvas.width = photoW + pad * 2;
+        canvas.height = photoH + pad + bottomArea;
+
+        const photoX = pad;
+        const photoY = pad;
+        ctx.fillStyle = "#fdfcf8";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const srcRatio = single.img.width / single.img.height;
+        const dstRatio = photoW / photoH;
+        let sx = 0;
+        let sy = 0;
+        let sw = single.img.width;
+        let sh = single.img.height;
+
+        if (srcRatio > dstRatio) {
+          sh = single.img.height;
+          sw = sh * dstRatio;
+          sx = (single.img.width - sw) / 2;
+        } else {
+          sw = single.img.width;
+          sh = sw / dstRatio;
+          sy = (single.img.height - sh) / 2;
+        }
+
+        ctx.drawImage(single.img, sx, sy, sw, sh, photoX, photoY, photoW, photoH);
+
+        ctx.fillStyle = "#232323";
+        ctx.textAlign = "center";
+        ctx.font = '700 46px "Inter", sans-serif';
+        ctx.fillText("VIBE CAPTURED.", canvas.width / 2, photoY + photoH + 82);
+
+        ctx.fillStyle = "#666";
+        ctx.font = '600 24px "Inter", sans-serif';
+        ctx.fillText("SAVE YOUR GOOD VIBE", canvas.width / 2, photoY + photoH + 128);
+
+        ctx.fillStyle = "#4b3e1b";
+        ctx.font = '800 32px "Inter", sans-serif';
+        ctx.fillText(`VIBE: ${single.emotion}`, canvas.width / 2, photoY + photoH + 170);
+
+        ctx.fillStyle = "#8a8a8a";
+        ctx.font = '500 20px "Inter", sans-serif';
+        const singleDate = new Date().toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+        ctx.fillText(singleDate, canvas.width / 2, photoY + photoH + 210);
+
+        return canvas.toDataURL("image/jpeg", 0.94);
+      }
+
+      // For 2+ people: grid layout with slanted Polaroids
+      const numRows = Math.ceil(loaded.length / 2);
+      canvas.width = 1500;
+      canvas.height = 300 + numRows * 920;
+
+      ctx.fillStyle = "#f6f3ea";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const bg = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      bg.addColorStop(0, "rgba(255, 215, 0, 0.14)");
+      bg.addColorStop(1, "rgba(22, 18, 8, 0.06)");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const drawSlantedPolaroid = (capture, x, y, angleDeg) => {
+        const frameW = 620;
+        const frameH = 980;
+        const photoX = 30;
+        const photoY = 30;
+        const photoW = frameW - 60;
+        const photoH = Math.round(photoW * 4 / 3);
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate((angleDeg * Math.PI) / 180);
+        ctx.shadowColor = "rgba(0,0,0,0.24)";
+        ctx.shadowBlur = 26;
+        ctx.shadowOffsetY = 14;
+
+        ctx.fillStyle = "#fdfcf8";
+        ctx.fillRect(-frameW / 2, -frameH / 2, frameW, frameH);
+        ctx.shadowColor = "transparent";
+
+        const srcRatio = capture.img.width / capture.img.height;
+        const dstRatio = photoW / photoH;
+        let sx = 0;
+        let sy = 0;
+        let sw = capture.img.width;
+        let sh = capture.img.height;
+
+        if (srcRatio > dstRatio) {
+          sh = capture.img.height;
+          sw = sh * dstRatio;
+          sx = (capture.img.width - sw) / 2;
+        } else {
+          sw = capture.img.width;
+          sh = sw / dstRatio;
+          sy = (capture.img.height - sh) / 2;
+        }
+
+        ctx.drawImage(
+          capture.img,
+          sx,
+          sy,
+          sw,
+          sh,
+          -frameW / 2 + photoX,
+          -frameH / 2 + photoY,
+          photoW,
+          photoH
+        );
+
+        ctx.fillStyle = "#2b2b2b";
+        ctx.textAlign = "center";
+        ctx.font = '800 42px "Inter", sans-serif';
+        ctx.fillText(capture.emotion, 0, -frameH / 2 + photoY + photoH + 90);
+        ctx.restore();
+      };
+
+      // Draw grid: 2 per row
+      for (let i = 0; i < loaded.length; i++) {
+        const row = Math.floor(i / 2);
+        const col = i % 2;
+
+        const baseY = 200 + row * 920;
+
+        if (col === 0) {
+          // Left side
+          drawSlantedPolaroid(loaded[i], 400, baseY + 100, -10);
+        } else {
+          // Right side
+          drawSlantedPolaroid(loaded[i], 1100, baseY + 180, 10);
+        }
+      }
+
+      // Title
+      ctx.fillStyle = "#2a2a2a";
       ctx.textAlign = "center";
-      ctx.font = '700 46px "Inter", sans-serif';
-      ctx.fillText("VIBE CAPTURED.", canvas.width / 2, photoY + photoH + 82);
+      ctx.font = '700 54px "Inter", sans-serif';
+      const titleText = loaded.length === 2 ? "DOUBLE VIBE CAPTURE" : `${loaded.length} VIBE CAPTURE`;
+      ctx.fillText(titleText, canvas.width / 2, 120);
 
       ctx.fillStyle = "#666";
-      ctx.font = '600 24px "Inter", sans-serif';
-      ctx.fillText("CALIBRATE YOUR SERENITY", canvas.width / 2, photoY + photoH + 128);
+      ctx.font = '600 26px "Inter", sans-serif';
+      ctx.fillText("SAVE YOUR GOOD VIBE", canvas.width / 2, 162);
 
-      const cleanEmotion = emotionLabel || "UNKNOWN";
-      ctx.fillStyle = "#4b3e1b";
-      ctx.font = '800 32px "Inter", sans-serif';
-      ctx.fillText(`VIBE: ${cleanEmotion}`, canvas.width / 2, photoY + photoH + 170);
-
-      ctx.fillStyle = "#8a8a8a";
-      ctx.font = '500 20px "Inter", sans-serif';
-      const dateLabel = new Date().toLocaleDateString(undefined, {
+      // Date at bottom
+      const multiDate = new Date().toLocaleDateString(undefined, {
         year: "numeric",
         month: "short",
         day: "numeric"
       });
-      ctx.fillText(dateLabel, canvas.width / 2, photoY + photoH + 210);
+      ctx.fillStyle = "#7a7a7a";
+      ctx.font = '500 22px "Inter", sans-serif';
+      ctx.fillText(multiDate, canvas.width / 2, canvas.height - 70);
 
       return canvas.toDataURL("image/jpeg", 0.94);
     }
 
-    async function downloadCapture() {
-      if (!state.lastCaptureDataUrl) return;
+    function getRecentCapturesForDownload() {
+      if (state.captureHistory.length >= 2) {
+        return state.captureHistory.slice(-2);
+      }
+      if (state.lastCaptureDataUrl) {
+        return [{
+          dataUrl: state.lastCaptureDataUrl,
+          emotion: state.lastCaptureEmotion || "UNKNOWN"
+        }];
+      }
+      return [];
+    }
 
-      let downloadDataUrl = state.lastCaptureDataUrl;
+    async function downloadCapture() {
+      const recentCaptures = getRecentCapturesForDownload();
+      if (!recentCaptures.length) return;
+
+      let downloadDataUrl = recentCaptures[recentCaptures.length - 1].dataUrl;
       try {
-        downloadDataUrl = await buildPolaroidDownload(
-          state.lastCaptureDataUrl,
-          state.lastCaptureEmotion
-        );
+        downloadDataUrl = await buildPolaroidDownload(recentCaptures);
       } catch (err) {
         console.warn("Polaroid render failed, using raw capture:", err);
       }
